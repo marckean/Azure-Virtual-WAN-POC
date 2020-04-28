@@ -1,8 +1,7 @@
 Azure Virtual WAN - POC
 -----------------------
 
-This **part 1** of a 5 part series of templates to deploy a glorified 3 tier
-Azure network
+A POC to test Azure Virtual WAN, Azure Virtual WAN HUB and Always On VPN.
 
 Details
 -------
