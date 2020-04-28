@@ -1,0 +1,1477 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualWans_AVW_Lab_name": {
+            "defaultValue": "AVW-Lab",
+            "type": "String"
+        },
+        "virtualMachines_Win10_01_name": {
+            "defaultValue": "Win10-01",
+            "type": "String"
+        },
+        "virtualMachines_TestVM_01_name": {
+            "defaultValue": "TestVM-01",
+            "type": "String"
+        },
+        "firewallPolicies_Policy01_name": {
+            "defaultValue": "Policy01",
+            "type": "String"
+        },
+        "privateEndpoints_testfile_name": {
+            "defaultValue": "testfile",
+            "type": "String"
+        },
+        "bastionHosts_SpokePEBastion_name": {
+            "defaultValue": "SpokePEBastion",
+            "type": "String"
+        },
+        "virtualNetworks_SpokeVnetPE_name": {
+            "defaultValue": "SpokeVnetPE",
+            "type": "String"
+        },
+        "storageAccounts_20200419wst_name": {
+            "defaultValue": "20200419wst",
+            "type": "String"
+        },
+        "networkInterfaces_win10_0112_name": {
+            "defaultValue": "win10-0112",
+            "type": "String"
+        },
+        "storageAccounts_deelab03diag_name": {
+            "defaultValue": "deelab03diag",
+            "type": "String"
+        },
+        "virtualHubs_VWHUB_WUS_PROD_01_name": {
+            "defaultValue": "VWHUB-WUS-PROD-01",
+            "type": "String"
+        },
+        "bastionHosts_SpokeWin10Bastion_name": {
+            "defaultValue": "SpokeWin10Bastion",
+            "type": "String"
+        },
+        "networkInterfaces_testvm_01424_name": {
+            "defaultValue": "testvm-01424",
+            "type": "String"
+        },
+        "virtualNetworks_SpokeVnetWin10_name": {
+            "defaultValue": "SpokeVnetWin10",
+            "type": "String"
+        },
+        "publicIPAddresses_SpokeVnetPE_ip_name": {
+            "defaultValue": "SpokeVnetPE-ip",
+            "type": "String"
+        },
+        "routeTables_vNet_to_Azure_Firewall_name": {
+            "defaultValue": "vNet_to_Azure_Firewall",
+            "type": "String"
+        },
+        "publicIPAddresses_SpokeVnetWin10_ip_name": {
+            "defaultValue": "SpokeVnetWin10-ip",
+            "type": "String"
+        },
+        "vpnServerConfigurations_AlwaysONVPN_name": {
+            "defaultValue": "AlwaysONVPN",
+            "type": "String"
+        },
+        "vpnServerConfigurations_MSFT_OpenVPN_name": {
+            "defaultValue": "MSFT-OpenVPN",
+            "type": "String"
+        },
+        "azureFirewalls_AzureFirewall_VWHUB_WUS_PROD_01_name": {
+            "defaultValue": "AzureFirewall_VWHUB-WUS-PROD-01",
+            "type": "String"
+        },
+        "privateDnsZones_privatelink_file_core_windows_net_name": {
+            "defaultValue": "privatelink.file.core.windows.net",
+            "type": "String"
+        },
+        "vpnGateways_ab2100f63b6d4d019a3b0300589cf0f0_westus2_gw_name": {
+            "defaultValue": "ab2100f63b6d4d019a3b0300589cf0f0-westus2-gw",
+            "type": "String"
+        },
+        "p2sVpnGateways_6cf17a349e3744ae97f1c8d6327dd2df_westus2_gw_name": {
+            "defaultValue": "6cf17a349e3744ae97f1c8d6327dd2df-westus2-gw",
+            "type": "String"
+        },
+        "networkInterfaces_testfile_nic_1f2eb02a_c7c0_4e4a_8c0e_8f4a00369e1a_name": {
+            "defaultValue": "testfile.nic.1f2eb02a-c7c0-4e4a-8c0e-8f4a00369e1a",
+            "type": "String"
+        },
+        "virtualNetworks_HV_VWHUB_WUS_PROD_01_4d9b1ca1_92ce_4cba_86fc_a38061313b9d_externalid": {
+            "defaultValue": "/subscriptions/7ef0661d-a551-4476-8927-472eb5d87588/resourceGroups/RG_VWHUB-WUS-PROD-01_e47d0105-c16d-400d-9085-d0e3a839214d/providers/Microsoft.Network/virtualNetworks/HV_VWHUB-WUS-PROD-01_4d9b1ca1-92ce-4cba-86fc-a38061313b9d",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/firewallPolicies",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('firewallPolicies_Policy01_name')]",
+            "location": "westus2",
+            "properties": {
+                "threatIntelMode": "Alert"
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2018-09-01",
+            "name": "[parameters('privateDnsZones_privatelink_file_core_windows_net_name')]",
+            "location": "global",
+            "properties": {
+                "maxNumberOfRecordSets": 25000,
+                "maxNumberOfVirtualNetworkLinks": 1000,
+                "maxNumberOfVirtualNetworkLinksWithRegistration": 100,
+                "numberOfRecordSets": 2,
+                "numberOfVirtualNetworkLinks": 2,
+                "numberOfVirtualNetworkLinksWithRegistration": 0,
+                "provisioningState": "Succeeded"
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('publicIPAddresses_SpokeVnetPE_ip_name')]",
+            "location": "westus2",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "ipAddress": "52.250.24.123",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('publicIPAddresses_SpokeVnetWin10_ip_name')]",
+            "location": "westus2",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "ipAddress": "52.250.81.82",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('routeTables_vNet_to_Azure_Firewall_name')]",
+            "location": "westus2",
+            "properties": {
+                "disableBgpRoutePropagation": true,
+                "routes": [
+                    {
+                        "name": "All_Traffic_to_AzureFirewall",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.32.254.68"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualWans",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('virtualWans_AVW_Lab_name')]",
+            "location": "westus2",
+            "properties": {
+                "disableVpnEncryption": false,
+                "allowBranchToBranchTraffic": true,
+                "allowVnetToVnetTraffic": false,
+                "office365LocalBreakoutCategory": "None",
+                "type": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Network/vpnServerConfigurations",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('vpnServerConfigurations_AlwaysONVPN_name')]",
+            "location": "westus2",
+            "properties": {
+                "vpnProtocols": [
+                    "IkeV2",
+                    "OpenVPN"
+                ],
+                "vpnAuthenticationTypes": [
+                    "Certificate"
+                ],
+                "vpnClientRootCertificates": [
+                    {
+                        "name": "P2SRootCert",
+                        "publicCertData": "MIIC5zCCAc+gAwIBAgIQWahNpbD5d6RCQd9rhwBVZTANBgkqhkiG9w0BAQsFADAWMRQwEgYDVQQD DAtQMlNSb290Q2VydDAeFw0yMDA0MjAwNzEwMzZaFw0yMTA0MjAwNzMwMzZaMBYxFDASBgNVBAMM C1AyU1Jvb3RDZXJ0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWB+KFFz9uoVC48c aIdfRknM/yhgvk6mVpMpAXgZod1YAom+dpklKa+NM9d9qUOYQK84zJjjfbhIPse6xild75LGx7Ch 6OfkNkfqaKhGc5dGfDmd1rHAEyrtpBgrRDFp7e+qVw9fmHP1jamsJIsjzEAvOMAZ7afiDGaAp2cN UFnx61A6+z0rndH6zOyiUgHLuM8sJAtzCrU/H9Izb/Q4XsAf1KqhG+WPZV+59j/biIW7RbXTqoW+ BKyCyHcO4XT0DWdRnwtZdh+SAdZHhSmwxGAtgm9qFQ3/qqZbPGH/nb7F23kYdrmsWPaupropA7VE 6nPDB6ZzBqdcODYLFFF9TQIDAQABozEwLzAOBgNVHQ8BAf8EBAMCAgQwHQYDVR0OBBYEFJsPtZp0 87CjVgAtpc952rHIWOGyMA0GCSqGSIb3DQEBCwUAA4IBAQC9DHfYKlDa9x3F5pcSs6xlWG+MxYDA LoJlDPMup+Wz4+09wSiRfxVewa8pWUNKqJlc3kLD1pJbk6NxsL59wqKS+u+xYP3d9jdkQSbdOGi/ 75v17v1MtOVZPDSeA+vJaEMeKq1AHD0bNzLOVgERsW4F3nGC4pqgUk05I/+vWpioC9pCOAwKq4sg yFJZR8ja7dU2tFcCdFWsGBRZ9KREbI6wQGvfsELw/N7mpPbVHWXf2j7/h4yr8KwwU+mF6xcdvZzw HqJFMvlxDR2BAQBznQ8UHDJaGWpSfkpGJIRLgeCZuddYY8t+eOjA4d7coRf2cSuB4ZSos/QFBZ+c WhR0mk/s"
+                    }
+                ],
+                "vpnClientRevokedCertificates": [],
+                "radiusServerRootCertificates": [],
+                "radiusClientRootCertificates": [],
+                "vpnClientIpsecPolicies": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/vpnServerConfigurations",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('vpnServerConfigurations_MSFT_OpenVPN_name')]",
+            "location": "westus2",
+            "properties": {
+                "vpnProtocols": [
+                    "OpenVPN"
+                ],
+                "vpnAuthenticationTypes": [
+                    "AAD"
+                ],
+                "vpnClientRootCertificates": [],
+                "vpnClientRevokedCertificates": [],
+                "radiusServerRootCertificates": [],
+                "radiusClientRootCertificates": [],
+                "aadAuthenticationParameters": {
+                    "aadTenant": "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47",
+                    "aadAudience": "41b23e61-6c1e-4545-b367-cd054e0ed4b4",
+                    "aadIssuer": "https://sts.windows.net/72f988bf-86f1-41af-91ab-2d7cd011db47/"
+                },
+                "vpnClientIpsecPolicies": []
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "name": "[parameters('storageAccounts_20200419wst_name')]",
+            "location": "westus2",
+            "sku": {
+                "name": "Premium_LRS",
+                "tier": "Premium"
+            },
+            "kind": "FileStorage",
+            "properties": {
+                "largeFileSharesState": "Enabled",
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Deny"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "name": "[parameters('storageAccounts_deelab03diag_name')]",
+            "location": "westus2",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "properties": {
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/firewallPolicies/ruleGroups",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('firewallPolicies_Policy01_name'), '/DefaultApplicationRuleCollectionGroup')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/firewallPolicies', parameters('firewallPolicies_Policy01_name'))]"
+            ],
+            "properties": {
+                "priority": 300,
+                "rules": [
+                    {
+                        "ruleType": "FirewallPolicyFilterRule",
+                        "action": {
+                            "type": "Allow"
+                        },
+                        "ruleConditions": [
+                            {
+                                "ruleConditionType": "ApplicationRuleCondition",
+                                "name": "Allow-msft",
+                                "protocols": [
+                                    {
+                                        "protocolType": "Http",
+                                        "port": 80
+                                    },
+                                    {
+                                        "protocolType": "Https",
+                                        "port": 443
+                                    }
+                                ],
+                                "fqdnTags": [],
+                                "targetFqdns": [
+                                    "*.microsoft.com"
+                                ],
+                                "sourceAddresses": [
+                                    "*"
+                                ]
+                            }
+                        ],
+                        "name": "RC-02",
+                        "priority": 100
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/firewallPolicies/ruleGroups",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('firewallPolicies_Policy01_name'), '/DefaultNetworkRuleCollectionGroup')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/firewallPolicies', parameters('firewallPolicies_Policy01_name'))]"
+            ],
+            "properties": {
+                "priority": 200,
+                "rules": [
+                    {
+                        "ruleType": "FirewallPolicyFilterRule",
+                        "action": {
+                            "type": "Allow"
+                        },
+                        "ruleConditions": [
+                            {
+                                "ruleConditionType": "NetworkRuleCondition",
+                                "name": "P2SVPN",
+                                "ipProtocols": [
+                                    "Any"
+                                ],
+                                "sourceAddresses": [
+                                    "*"
+                                ],
+                                "destinationAddresses": [
+                                    "*"
+                                ],
+                                "destinationPorts": [
+                                    "*"
+                                ]
+                            }
+                        ],
+                        "name": "vNetTransitAccess",
+                        "priority": 200
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('networkInterfaces_testfile_nic_1f2eb02a_c7c0_4e4a_8c0e_8f4a00369e1a_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetPE_name'), 'Two')]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "file-file.privateEndpoint",
+                        "properties": {
+                            "privateIPAddress": "10.32.1.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetPE_name'), 'Two')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('networkInterfaces_testvm_01424_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetPE_name'), 'One')]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.32.0.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetPE_name'), 'One')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('networkInterfaces_win10_0112_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetWin10_name'), 'One')]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.32.32.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetWin10_name'), 'One')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/A",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_file_core_windows_net_name'), '/20200419wst')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_file_core_windows_net_name'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "aRecords": [
+                    {
+                        "ipv4Address": "10.32.1.4"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/SOA",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_file_core_windows_net_name'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_file_core_windows_net_name'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "soaRecord": {
+                    "email": "azureprivatedns-host.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "azureprivatedns.net",
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1,
+                    "minimumTtl": 300
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables/routes",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('routeTables_vNet_to_Azure_Firewall_name'), '/All_Traffic_to_AzureFirewall')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', parameters('routeTables_vNet_to_Azure_Firewall_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "0.0.0.0/0",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "10.32.254.68"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualHubs/routeTables",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualHubs_VWHUB_WUS_PROD_01_name'), '/BranchRouteTable')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', parameters('virtualHubs_VWHUB_WUS_PROD_01_name'))]"
+            ],
+            "properties": {
+                "routes": [
+                    {
+                        "destinationType": "CIDR",
+                        "destinations": [
+                            "10.32.0.0/20",
+                            "10.32.32.0/20",
+                            "10.0.0.0/24",
+                            "0.0.0.0/0"
+                        ],
+                        "nextHopType": "IPAddress",
+                        "nextHops": [
+                            "10.32.254.68"
+                        ]
+                    }
+                ],
+                "attachedConnections": [
+                    "All_Branches"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualHubs/routeTables",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualHubs_VWHUB_WUS_PROD_01_name'), '/VirtualNetworkRouteTable')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', parameters('virtualHubs_VWHUB_WUS_PROD_01_name'))]"
+            ],
+            "properties": {
+                "routes": [
+                    {
+                        "destinationType": "CIDR",
+                        "destinations": [
+                            "10.32.0.0/20",
+                            "10.32.32.0/20",
+                            "10.0.0.0/24",
+                            "0.0.0.0/0"
+                        ],
+                        "nextHopType": "IPAddress",
+                        "nextHops": [
+                            "10.32.254.68"
+                        ]
+                    }
+                ],
+                "attachedConnections": [
+                    "All_Vnets"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('virtualNetworks_SpokeVnetPE_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+            ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.32.0.0/20"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "AzureBastionSubnet",
+                        "properties": {
+                            "addressPrefix": "10.32.2.0/27",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "One",
+                        "properties": {
+                            "addressPrefix": "10.32.0.0/24",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "Two",
+                        "properties": {
+                            "addressPrefix": "10.32.1.0/24",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [
+                    {
+                        "name": "ToSpokeVneWin10",
+                        "properties": {
+                            "peeringState": "Connected",
+                            "remoteVirtualNetwork": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+                            },
+                            "allowVirtualNetworkAccess": true,
+                            "allowForwardedTraffic": false,
+                            "allowGatewayTransit": false,
+                            "useRemoteGateways": false,
+                            "remoteAddressSpace": {
+                                "addressPrefixes": [
+                                    "10.32.32.0/20"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "RemoteVnetToHubPeering_0ad59df8-d3a3-4d66-be6f-d0efe5a29110",
+                        "properties": {
+                            "peeringState": "Connected",
+                            "remoteVirtualNetwork": {
+                                "id": "[parameters('virtualNetworks_HV_VWHUB_WUS_PROD_01_4d9b1ca1_92ce_4cba_86fc_a38061313b9d_externalid')]"
+                            },
+                            "allowVirtualNetworkAccess": true,
+                            "allowForwardedTraffic": false,
+                            "allowGatewayTransit": false,
+                            "useRemoteGateways": true,
+                            "remoteAddressSpace": {
+                                "addressPrefixes": [
+                                    "10.32.254.0/24"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "enableDdosProtection": false,
+                "enableVmProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('virtualNetworks_SpokeVnetWin10_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+            ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.32.32.0/20"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "AzureBastionSubnet",
+                        "properties": {
+                            "addressPrefix": "10.32.34.0/27",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "One",
+                        "properties": {
+                            "addressPrefix": "10.32.32.0/24",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "Two",
+                        "properties": {
+                            "addressPrefix": "10.32.33.0/24",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [
+                    {
+                        "name": "ToSpokeVnetPE",
+                        "properties": {
+                            "peeringState": "Connected",
+                            "remoteVirtualNetwork": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+                            },
+                            "allowVirtualNetworkAccess": true,
+                            "allowForwardedTraffic": false,
+                            "allowGatewayTransit": false,
+                            "useRemoteGateways": false,
+                            "remoteAddressSpace": {
+                                "addressPrefixes": [
+                                    "10.32.0.0/20"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "RemoteVnetToHubPeering_f971f93b-0b8f-4e83-960d-5f7c47df8e4d",
+                        "properties": {
+                            "peeringState": "Connected",
+                            "remoteVirtualNetwork": {
+                                "id": "[parameters('virtualNetworks_HV_VWHUB_WUS_PROD_01_4d9b1ca1_92ce_4cba_86fc_a38061313b9d_externalid')]"
+                            },
+                            "allowVirtualNetworkAccess": true,
+                            "allowForwardedTraffic": false,
+                            "allowGatewayTransit": false,
+                            "useRemoteGateways": true,
+                            "remoteAddressSpace": {
+                                "addressPrefixes": [
+                                    "10.32.254.0/24"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "enableDdosProtection": false,
+                "enableVmProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualNetworks_SpokeVnetPE_name'), '/AzureBastionSubnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.32.2.0/27",
+                "serviceEndpoints": [],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualNetworks_SpokeVnetWin10_name'), '/AzureBastionSubnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.32.34.0/27",
+                "serviceEndpoints": [],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualNetworks_SpokeVnetPE_name'), '/One')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.32.0.0/24",
+                "serviceEndpoints": [],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualNetworks_SpokeVnetWin10_name'), '/One')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.32.32.0/24",
+                "serviceEndpoints": [],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualNetworks_SpokeVnetPE_name'), '/Two')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.32.1.0/24",
+                "serviceEndpoints": [],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualNetworks_SpokeVnetWin10_name'), '/Two')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.32.33.0/24",
+                "serviceEndpoints": [],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualNetworks_SpokeVnetPE_name'), '/RemoteVnetToHubPeering_0ad59df8-d3a3-4d66-be6f-d0efe5a29110')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+            ],
+            "properties": {
+                "peeringState": "Connected",
+                "remoteVirtualNetwork": {
+                    "id": "[parameters('virtualNetworks_HV_VWHUB_WUS_PROD_01_4d9b1ca1_92ce_4cba_86fc_a38061313b9d_externalid')]"
+                },
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": false,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": true,
+                "remoteAddressSpace": {
+                    "addressPrefixes": [
+                        "10.32.254.0/24"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualNetworks_SpokeVnetWin10_name'), '/RemoteVnetToHubPeering_f971f93b-0b8f-4e83-960d-5f7c47df8e4d')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+            ],
+            "properties": {
+                "peeringState": "Connected",
+                "remoteVirtualNetwork": {
+                    "id": "[parameters('virtualNetworks_HV_VWHUB_WUS_PROD_01_4d9b1ca1_92ce_4cba_86fc_a38061313b9d_externalid')]"
+                },
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": false,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": true,
+                "remoteAddressSpace": {
+                    "addressPrefixes": [
+                        "10.32.254.0/24"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/vpnGateways",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('vpnGateways_ab2100f63b6d4d019a3b0300589cf0f0_westus2_gw_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', parameters('virtualHubs_VWHUB_WUS_PROD_01_name'))]"
+            ],
+            "properties": {
+                "connections": [],
+                "virtualHub": {
+                    "id": "[resourceId('Microsoft.Network/virtualHubs', parameters('virtualHubs_VWHUB_WUS_PROD_01_name'))]"
+                },
+                "bgpSettings": {
+                    "asn": 65515,
+                    "peerWeight": 0
+                },
+                "vpnGatewayScaleUnit": 1
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccounts_deelab03diag_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_deelab03diag_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccounts_20200419wst_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_20200419wst_name'))]"
+            ],
+            "sku": {
+                "name": "Premium_LRS",
+                "tier": "Premium"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccounts_deelab03diag_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_deelab03diag_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('virtualMachines_TestVM_01_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_testvm_01424_name'))]",
+                "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_deelab03diag_name'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_D2s_v3"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "datacenter-core-1909-with-containers-smalldisk",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[concat(parameters('virtualMachines_TestVM_01_name'), '_OsDisk_1_5a66d20e60b94df4b31f3d0559b61401')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_TestVM_01_name'), '_OsDisk_1_5a66d20e60b94df4b31f3d0559b61401'))]"
+                        },
+                        "diskSizeGB": 30
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_TestVM_01_name')]",
+                    "adminUsername": "marc.kean",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_testvm_01424_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('storageAccounts_deelab03diag_name'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('virtualMachines_Win10_01_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_win10_0112_name'))]",
+                "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_deelab03diag_name'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_D2s_v3"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsDesktop",
+                        "offer": "Windows-10",
+                        "sku": "19h2-pro",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[concat(parameters('virtualMachines_Win10_01_name'), '_OsDisk_1_32da8443bdf44a3db6adae81d15892f0')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "StandardSSD_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_Win10_01_name'), '_OsDisk_1_32da8443bdf44a3db6adae81d15892f0'))]"
+                        },
+                        "diskSizeGB": 127
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_Win10_01_name')]",
+                    "adminUsername": "marc.kean",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_win10_0112_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('storageAccounts_deelab03diag_name'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/azureFirewalls",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('azureFirewalls_AzureFirewall_VWHUB_WUS_PROD_01_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', parameters('virtualHubs_VWHUB_WUS_PROD_01_name'))]",
+                "[resourceId('Microsoft.Network/firewallPolicies', parameters('firewallPolicies_Policy01_name'))]"
+            ],
+            "properties": {
+                "sku": {
+                    "name": "AZFW_Hub",
+                    "tier": "Standard"
+                },
+                "additionalProperties": {},
+                "virtualHub": {
+                    "id": "[resourceId('Microsoft.Network/virtualHubs', parameters('virtualHubs_VWHUB_WUS_PROD_01_name'))]"
+                },
+                "firewallPolicy": {
+                    "id": "[resourceId('Microsoft.Network/firewallPolicies', parameters('firewallPolicies_Policy01_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/bastionHosts",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('bastionHosts_SpokePEBastion_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_SpokeVnetPE_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetPE_name'), 'AzureBastionSubnet')]"
+            ],
+            "properties": {
+                "dnsName": "bst-788f0776-9761-4d8c-8777-293c24913712.bastion.azure.com",
+                "ipConfigurations": [
+                    {
+                        "name": "IpConf",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_SpokeVnetPE_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetPE_name'), 'AzureBastionSubnet')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/bastionHosts",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('bastionHosts_SpokeWin10Bastion_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_SpokeVnetWin10_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetWin10_name'), 'AzureBastionSubnet')]"
+            ],
+            "properties": {
+                "dnsName": "bst-d16437a8-f319-42aa-a1b3-75771c8aeccb.bastion.azure.com",
+                "ipConfigurations": [
+                    {
+                        "name": "IpConf",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_SpokeVnetWin10_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetWin10_name'), 'AzureBastionSubnet')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/p2sVpnGateways",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('p2sVpnGateways_6cf17a349e3744ae97f1c8d6327dd2df_westus2_gw_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', parameters('virtualHubs_VWHUB_WUS_PROD_01_name'))]",
+                "[resourceId('Microsoft.Network/vpnServerConfigurations', parameters('vpnServerConfigurations_AlwaysONVPN_name'))]"
+            ],
+            "properties": {
+                "virtualHub": {
+                    "id": "[resourceId('Microsoft.Network/virtualHubs', parameters('virtualHubs_VWHUB_WUS_PROD_01_name'))]"
+                },
+                "vpnServerConfiguration": {
+                    "id": "[resourceId('Microsoft.Network/vpnServerConfigurations', parameters('vpnServerConfigurations_AlwaysONVPN_name'))]"
+                },
+                "p2SConnectionConfigurations": [
+                    {
+                        "name": "P2SConnectionConfigDefault",
+                        "properties": {
+                            "vpnClientAddressPool": {
+                                "addressPrefixes": [
+                                    "10.0.0.0/24"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "vpnGatewayScaleUnit": 1
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_file_core_windows_net_name'), '/4bit4yt33o2is')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_file_core_windows_net_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "virtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_file_core_windows_net_name'), '/spokevnetwin10')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_file_core_windows_net_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "virtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('privateEndpoints_testfile_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_20200419wst_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetPE_name'), 'Two')]"
+            ],
+            "properties": {
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[concat(parameters('privateEndpoints_testfile_name'), '_da248081-7823-439c-b521-8cc4dee3b014')]",
+                        "properties": {
+                            "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_20200419wst_name'))]",
+                            "groupIds": [
+                                "file"
+                            ],
+                            "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "description": "Auto-Approved",
+                                "actionsRequired": "None"
+                            }
+                        }
+                    }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "subnet": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SpokeVnetPE_name'), 'Two')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualNetworks_SpokeVnetWin10_name'), '/ToSpokeVnetPE')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+            ],
+            "properties": {
+                "peeringState": "Connected",
+                "remoteVirtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+                },
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": false,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteAddressSpace": {
+                    "addressPrefixes": [
+                        "10.32.0.0/20"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('virtualNetworks_SpokeVnetPE_name'), '/ToSpokeVneWin10')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+            ],
+            "properties": {
+                "peeringState": "Connected",
+                "remoteVirtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+                },
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": false,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteAddressSpace": {
+                    "addressPrefixes": [
+                        "10.32.32.0/20"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccounts_deelab03diag_name'), '/default/bootdiagnostics-testvm01-f17ba47f-09f5-40c9-94c9-48b75a6ae672')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_deelab03diag_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_deelab03diag_name'))]"
+            ],
+            "properties": {
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccounts_deelab03diag_name'), '/default/bootdiagnostics-win1001-37dc5152-3b55-4889-bc79-a4b4b219500f')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_deelab03diag_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_deelab03diag_name'))]"
+            ],
+            "properties": {
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccounts_20200419wst_name'), '/default/test')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_20200419wst_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_20200419wst_name'))]"
+            ],
+            "properties": {
+                "shareQuota": 1024
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/privateEndpointConnections",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccounts_20200419wst_name'), '/', parameters('storageAccounts_20200419wst_name'), '.f44aac0c-382f-47eb-8ccd-6348481c4142')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_20200419wst_name'))]",
+                "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_testfile_name'))]"
+            ],
+            "properties": {
+                "provisioningState": "Succeeded",
+                "privateEndpoint": {
+                    "id": "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_testfile_name'))]"
+                },
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "description": "Auto-Approved",
+                    "actionRequired": "None"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualHubs",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('virtualHubs_VWHUB_WUS_PROD_01_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]",
+                "[resourceId('Microsoft.Network/virtualWans', parameters('virtualWans_AVW_Lab_name'))]",
+                "[resourceId('Microsoft.Network/vpnGateways', parameters('vpnGateways_ab2100f63b6d4d019a3b0300589cf0f0_westus2_gw_name'))]",
+                "[resourceId('Microsoft.Network/p2sVpnGateways', parameters('p2sVpnGateways_6cf17a349e3744ae97f1c8d6327dd2df_westus2_gw_name'))]",
+                "[resourceId('Microsoft.Network/azureFirewalls', parameters('azureFirewalls_AzureFirewall_VWHUB_WUS_PROD_01_name'))]"
+            ],
+            "properties": {
+                "virtualNetworkConnections": [
+                    {
+                        "name": "ToSpokeVnetPE",
+                        "properties": {
+                            "remoteVirtualNetwork": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
+                            },
+                            "allowHubToRemoteVnetTransit": true,
+                            "allowRemoteVnetToUseHubVnetGateways": true,
+                            "enableInternetSecurity": true
+                        }
+                    },
+                    {
+                        "name": "ToSpokeVnetWin10",
+                        "properties": {
+                            "remoteVirtualNetwork": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
+                            },
+                            "allowHubToRemoteVnetTransit": true,
+                            "allowRemoteVnetToUseHubVnetGateways": true,
+                            "enableInternetSecurity": true
+                        }
+                    }
+                ],
+                "virtualHubRouteTableV2s": [
+                    {
+                        "name": "VirtualNetworkRouteTable",
+                        "properties": {
+                            "routes": [
+                                {
+                                    "destinationType": "CIDR",
+                                    "destinations": [
+                                        "10.32.0.0/20",
+                                        "10.32.32.0/20",
+                                        "10.0.0.0/24",
+                                        "0.0.0.0/0"
+                                    ],
+                                    "nextHopType": "IPAddress",
+                                    "nextHops": [
+                                        "10.32.254.68"
+                                    ]
+                                }
+                            ],
+                            "attachedConnections": [
+                                "All_Vnets"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "BranchRouteTable",
+                        "properties": {
+                            "routes": [
+                                {
+                                    "destinationType": "CIDR",
+                                    "destinations": [
+                                        "10.32.0.0/20",
+                                        "10.32.32.0/20",
+                                        "10.0.0.0/24",
+                                        "0.0.0.0/0"
+                                    ],
+                                    "nextHopType": "IPAddress",
+                                    "nextHops": [
+                                        "10.32.254.68"
+                                    ]
+                                }
+                            ],
+                            "attachedConnections": [
+                                "All_Branches"
+                            ]
+                        }
+                    }
+                ],
+                "addressPrefix": "10.32.254.0/24",
+                "routeTable": {
+                    "routes": []
+                },
+                "virtualWan": {
+                    "id": "[resourceId('Microsoft.Network/virtualWans', parameters('virtualWans_AVW_Lab_name'))]"
+                },
+                "vpnGateway": {
+                    "id": "[resourceId('Microsoft.Network/vpnGateways', parameters('vpnGateways_ab2100f63b6d4d019a3b0300589cf0f0_westus2_gw_name'))]"
+                },
+                "p2SVpnGateway": {
+                    "id": "[resourceId('Microsoft.Network/p2sVpnGateways', parameters('p2sVpnGateways_6cf17a349e3744ae97f1c8d6327dd2df_westus2_gw_name'))]"
+                },
+                "azureFirewall": {
+                    "id": "[resourceId('Microsoft.Network/azureFirewalls', parameters('azureFirewalls_AzureFirewall_VWHUB_WUS_PROD_01_name'))]"
+                }
+            }
+        }
+    ]
+}
