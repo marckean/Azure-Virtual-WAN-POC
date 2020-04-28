@@ -1,16 +1,34 @@
-# Part 3 - Tier 3
-## Azure Virtual WAN POC
-This **part 1** of a 5 part series of templates to deploy a glorified 3 tier Azure network
+Azure Virtual WAN - POC
+-----------------------
 
-## Deployment note
-While you can deploy this fully functional deployment customised to suit your needs exactly, you can also deploy this environment **as is** to have a play and have a look at what it looks like in Azure. As part of this fully functional deployment - to ensure everything remains in-tact and works - it's recommended that the first four templates are deployed in the same order as above, however it's mandatory that the last one **vNetPeerings** is deployed last, as it is required that all vNets are deployed in order for peers to be created successfully.
+This **part 1** of a 5 part series of templates to deploy a glorified 3 tier
+Azure network
 
-This 5 part series of templates is fully functional with no over-lapping address ranges, UDRs have all the correct next hop IP addresses and all the template parameters are correctly set. In order to deploy this successfully, be sure to deploy the templates to following resource groups:
-- Azure-T1-Network | Resource Group **T1_01**
-- Azure-T2-Network | Resource Group **T2_01**
-- Azure-T3-Network | Resource Group **T3_01**
-- Azure-T3plus-Network | Resource Group **T3plus_01**
-- vNetPeerings | Resource Group ***Any Resource Group***
+Details
+-------
 
-This **Tier 3** repo is to be deployed last and fills in all the relevant peers for the vNets.
+This is a POC to demonstrate how to use Azure Virtual WAN, a Azure Virtual HUB
+within region and P2S (Point to Site) from on-prem into Azure and other
+**Spoke** virtual networks.
 
+This POC leverages on Always On VPN with Windows 10 in order to connect securely
+and remotely into Azure.
+
+![A picture containing object, clock, drawing, meter Description automatically generated](media/28c6f1cb4e96fb1629e13f531bd8de50.png)
+
+Always On VPN
+-------------
+
+**Always On VPN** is a Windows 10 feature that enables the active VPN profile to
+connect automatically and remain connected.
+
+**Always On VPN** connections include either of two types of tunnels:
+
+**Device tunnel**: Connects to specified VPN servers before users sign in to the
+device. Pre-sign-in connectivity scenarios and device management use a device
+tunnel.
+
+**User tunnel**: Connects only after users sign in to the device. By using user
+tunnels, you can access organization resources through VPN servers
+
+Test connectivity end-to-end from Windows 10 in the spoke vNet to on-prem.
