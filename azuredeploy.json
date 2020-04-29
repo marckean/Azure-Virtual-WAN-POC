@@ -22,10 +22,30 @@
             "defaultValue": "WestpacWAN_POC",
             "type": "String"
         },
-        "virtualNetworks_SpokeVnetPE_name": {
-            "defaultValue": "SpokeVnetPE",
-            "type": "String"
-        },
+        "vNetArray": {
+        "type": "array",
+        "defaultValue": [
+            {
+                "vnet": {"name": "SpokeVnetWin10", "addressPrefix": ["10.32.32.0/20"]},
+                "properties": [
+                  {"subnet": {"name": "subnet01", "addressPrefix": "10.32.32.0/20"}},
+                  {"subnet": {"name": "AzureBastionSubnet", "addressPrefix": "10.32.40.0/27"}},
+                  {"virtualNetworkPeerings": {"name": "subnet02", "addressPrefix": "10.32.72.0/27"}}
+                ]
+            },
+            {
+                "vnet": {"name": "SpokeVnetPE", "addressPrefix": ["10.32.64.0/20"]},
+                "properties": [
+                  {"subnet": {"name": "subnet01", "addressPrefix": "10.32.64.0/20"}},
+                  {"subnet": {"name": "subnet02", "addressPrefix": "10.32.72.0/27"}},
+                  {"virtualNetworkPeerings": {"name": "subnet02", "addressPrefix": "10.32.72.0/27"}}
+                ]
+            }
+        ],
+        "metadata": {
+            "description": "Array of spoke objects. See defaultValue for example."
+        }
+      },
         "networkInterfaces_testvm_016_name": {
             "defaultValue": "testvm-016",
             "type": "String"
@@ -318,107 +338,62 @@
             }
         },
         {
-            "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2019-12-01",
-            "name": "[concat(parameters('virtualNetworks_SpokeVnetPE_name'), '/AzureBastionSubnet')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
-            ],
-            "properties": {
-                "addressPrefix": "10.32.136.0/27",
-                "delegations": [],
-                "privateEndpointNetworkPolicies": "Enabled",
-                "privateLinkServiceNetworkPolicies": "Enabled"
-            }
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "[parameters('vNetArray')[copyIndex()].vnet.name]",
+        "apiVersion": "2018-04-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[concat('Microsoft.Network/routeTables/', variables('T2spokeRouteTableName'))]"
+        ],
+        "copy": {
+          "name": "T2vNetCopy",
+          "count": "[length(parameters('vNetArray'))]",
+          "mode": "Parallel"
         },
-        {
-            "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2019-12-01",
-            "name": "[concat(parameters('virtualNetworks_SpokeVnetWin10_name'), '/AzureBastionSubnet')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
-            ],
-            "properties": {
-                "addressPrefix": "10.32.72.0/27",
-                "delegations": [],
-                "privateEndpointNetworkPolicies": "Enabled",
-                "privateLinkServiceNetworkPolicies": "Enabled"
-            }
-        },
-        {
-            "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2019-12-01",
-            "name": "[concat(parameters('virtualNetworks_SpokeVnetPE_name'), '/One')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
-            ],
-            "properties": {
-                "addressPrefix": "10.32.128.0/21",
-                "delegations": [],
-                "privateEndpointNetworkPolicies": "Enabled",
-                "privateLinkServiceNetworkPolicies": "Enabled"
-            }
-        },
-        {
-            "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2019-12-01",
-            "name": "[concat(parameters('virtualNetworks_SpokeVnetWin10_name'), '/One')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
-            ],
-            "properties": {
-                "addressPrefix": "10.32.64.0/21",
-                "delegations": [],
-                "privateEndpointNetworkPolicies": "Enabled",
-                "privateLinkServiceNetworkPolicies": "Enabled"
-            }
-        },
-        {
-            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-            "apiVersion": "2019-12-01",
-            "name": "[concat(parameters('virtualNetworks_SpokeVnetWin10_name'), '/RemoteVnetToHubPeering_043db595-ae60-4865-8d96-c4315b4693de')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetWin10_name'))]"
-            ],
-            "properties": {
-                "peeringState": "Connected",
-                "remoteVirtualNetwork": {
-                    "id": "[parameters('virtualNetworks_HV_WestpacHUB_POC_205fae12_03c2_465b_aa25_f0adf12f8e32_externalid')]"
-                },
-                "allowVirtualNetworkAccess": true,
-                "allowForwardedTraffic": false,
-                "allowGatewayTransit": false,
-                "useRemoteGateways": true,
-                "remoteAddressSpace": {
-                    "addressPrefixes": [
-                        "10.32.254.0/24"
-                    ]
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": "[parameters('vNetArray')[copyIndex()].vnet.addressPrefix]"
+          },
+          "copy": [
+            {
+              "name": "subnet",
+              "count": "[length(parameters('vNetArray')[copyIndex()].properties)]",
+              "input": {
+                "name": "[parameters('vNetArray')[copyIndex()].properties[copyIndex('subnet')].subnet.name]",
+                "properties": {
+                  "addressPrefix": "[parameters('vNetArray')[copyIndex()].properties[copyIndex('properties')].subnet.addressPrefix]",
+                  "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', variables('T2spokeRouteTableName'))]"
+                  }
                 }
-            }
-        },
-        {
-            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-            "apiVersion": "2019-12-01",
-            "name": "[concat(parameters('virtualNetworks_SpokeVnetPE_name'), '/RemoteVnetToHubPeering_0fc97650-1fe0-41c1-9a9e-08d33d9440f4')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SpokeVnetPE_name'))]"
-            ],
-            "properties": {
-                "peeringState": "Connected",
-                "remoteVirtualNetwork": {
-                    "id": "[parameters('virtualNetworks_HV_WestpacHUB_POC_205fae12_03c2_465b_aa25_f0adf12f8e32_externalid')]"
-                },
-                "allowVirtualNetworkAccess": true,
-                "allowForwardedTraffic": false,
-                "allowGatewayTransit": false,
-                "useRemoteGateways": true,
-                "remoteAddressSpace": {
-                    "addressPrefixes": [
-                        "10.32.254.0/24"
-                    ]
+              }
+            },
+            {
+              "name": "virtualNetworkPeerings",
+              "count": "[length(parameters('vNetArray')[copyIndex()].properties)]",
+              "input": {
+                "name": "[parameters('vNetArray')[copyIndex()].properties[copyIndex('virtualNetworkPeerings')].subnet.name]",
+                "properties": {
+                  "addressPrefix": "[parameters('vNetArray')[copyIndex()].properties[copyIndex('virtualNetworkPeerings')].subnet.addressPrefix]",
+                  "peeringState": "Connected",
+                    "remoteVirtualNetwork": {
+                        "id": "[parameters('virtualNetworks_HV_WestpacHUB_POC_205fae12_03c2_465b_aa25_f0adf12f8e32_externalid')]"
+                    },
+                    "allowVirtualNetworkAccess": true,
+                    "allowForwardedTraffic": false,
+                    "allowGatewayTransit": false,
+                    "useRemoteGateways": true,
+                    "remoteAddressSpace": {
+                        "addressPrefixes": [
+                            "10.32.254.0/24"
+                        ]
+                    }
                 }
+              }
             }
-        },
+          ]
+        }
+      },
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices",
             "apiVersion": "2019-06-01",
