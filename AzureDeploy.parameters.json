@@ -2,80 +2,47 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "virtualWans_AVW_Lab_name": {
-      "value": "AVW-Lab"
-    },
     "virtualMachines_Win10_01_name": {
       "value": "Win10-01"
     },
     "virtualMachines_TestVM_01_name": {
       "value": "TestVM-01"
     },
-    "firewallPolicies_Policy01_name": {
-      "value": "Policy01"
+    "bastionHosts_Win10Bastion_name": {
+      "value": "Win10Bastion"
     },
-    "privateEndpoints_testfile_name": {
-      "value": "testfile"
+    "virtualHubs_WestpacHUB_POC_name": {
+      "value": "WestpacHUB_POC"
     },
-    "bastionHosts_SpokePEBastion_name": {
-      "value": "SpokePEBastion"
+    "virtualWans_WestpacWAN_POC_name": {
+      "value": "WestpacWAN_POC"
     },
     "virtualNetworks_SpokeVnetPE_name": {
       "value": "SpokeVnetPE"
     },
-    "storageAccounts_20200419wst_name": {
-      "value": "20200419wst"
+    "networkInterfaces_testvm_016_name": {
+      "value": "testvm-016"
     },
-    "networkInterfaces_win10_0112_name": {
-      "value": "win10-0112"
-    },
-    "storageAccounts_deelab03diag_name": {
-      "value": "deelab03diag"
-    },
-    "virtualHubs_VWHUB_WUS_PROD_01_name": {
-      "value": "VWHUB-WUS-PROD-01"
-    },
-    "bastionHosts_SpokeWin10Bastion_name": {
-      "value": "SpokeWin10Bastion"
-    },
-    "networkInterfaces_testvm_01424_name": {
-      "value": "testvm-01424"
+    "networkInterfaces_win10_0140_name": {
+      "value": "win10-0140"
     },
     "virtualNetworks_SpokeVnetWin10_name": {
       "value": "SpokeVnetWin10"
     },
-    "publicIPAddresses_SpokeVnetPE_ip_name": {
-      "value": "SpokeVnetPE-ip"
-    },
-    "routeTables_vNet_to_Azure_Firewall_name": {
-      "value": "vNet_to_Azure_Firewall"
+    "storageAccounts_westpacpocdiag_name": {
+      "value": "westpacpocdiag"
     },
     "publicIPAddresses_SpokeVnetWin10_ip_name": {
       "value": "SpokeVnetWin10-ip"
     },
-    "vpnServerConfigurations_AlwaysONVPN_name": {
-      "value": "AlwaysONVPN"
+    "vpnServerConfigurations_WestpacP2S_Conf_name": {
+      "value": "WestpacP2S_Conf"
     },
-    "vpnServerConfigurations_MSFT_OpenVPN_name": {
-      "value": "MSFT-OpenVPN"
+    "p2sVpnGateways_f65527a04b024106ae6689b5f8d3fb1d_westus2_gw_name": {
+      "value": "f65527a04b024106ae6689b5f8d3fb1d-westus2-gw"
     },
-    "azureFirewalls_AzureFirewall_VWHUB_WUS_PROD_01_name": {
-      "value": "AzureFirewall_VWHUB-WUS-PROD-01"
-    },
-    "privateDnsZones_privatelink_file_core_windows_net_name": {
-      "value": "privatelink.file.core.windows.net"
-    },
-    "vpnGateways_ab2100f63b6d4d019a3b0300589cf0f0_westus2_gw_name": {
-      "value": "ab2100f63b6d4d019a3b0300589cf0f0-westus2-gw"
-    },
-    "p2sVpnGateways_6cf17a349e3744ae97f1c8d6327dd2df_westus2_gw_name": {
-      "value": "6cf17a349e3744ae97f1c8d6327dd2df-westus2-gw"
-    },
-    "networkInterfaces_testfile_nic_1f2eb02a_c7c0_4e4a_8c0e_8f4a00369e1a_name": {
-      "value": "testfile.nic.1f2eb02a-c7c0-4e4a-8c0e-8f4a00369e1a"
-    },
-    "virtualNetworks_HV_VWHUB_WUS_PROD_01_4d9b1ca1_92ce_4cba_86fc_a38061313b9d_externalid": {
-      "value": "/subscriptions/7ef0661d-a551-4476-8927-472eb5d87588/resourceGroups/RG_VWHUB-WUS-PROD-01_e47d0105-c16d-400d-9085-d0e3a839214d/providers/Microsoft.Network/virtualNetworks/HV_VWHUB-WUS-PROD-01_4d9b1ca1-92ce-4cba-86fc-a38061313b9d"
+    "virtualNetworks_HV_WestpacHUB_POC_205fae12_03c2_465b_aa25_f0adf12f8e32_externalid": {
+      "value": "/subscriptions/7ef0661d-a551-4476-8927-472eb5d87588/resourceGroups/RG_WestpacHUB_POC_04192766-7c93-41a1-b581-f4e376392d48/providers/Microsoft.Network/virtualNetworks/HV_WestpacHUB_POC_205fae12-03c2-465b-aa25-f0adf12f8e32"
     }
   }
 }
