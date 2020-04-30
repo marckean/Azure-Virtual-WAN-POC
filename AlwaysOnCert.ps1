@@ -78,20 +78,21 @@ Add-VpnConnection -AuthenticationMethod MachineCertificate -ServerName $VPN_Serv
 ###############################################################################
 # Connection of the VPN connection
 ###############################################################################
-$vpnName = $VPN_Name;
-    $vpn = Get-VpnConnection -Name $vpnName;
-    if($vpn.ConnectionStatus -eq "Disconnected"){
-    rasdial $vpnName;
-    }
+if(Get-VpnConnection -Name $VPN_Name -ErrorAction SilentlyContinue){$vpn = Get-VpnConnection -Name $VPN_Name}
+if(Get-VpnConnection -Name $VPN_Name -AllUserConnection -ErrorAction SilentlyContinue){$vpn = Get-VpnConnection -Name $VPN_Name -AllUserConnection}
+
+if($vpn.ConnectionStatus -eq "Disconnected"){
+rasdial $VPN_Name;
+}
 
 ###############################################################################
 # Disconnection of the VPN connection
 ###############################################################################
-$vpnName = $VPN_Name;
-$vpn = Get-VpnConnection -Name $vpnName;
+if(Get-VpnConnection -Name $VPN_Name -ErrorAction SilentlyContinue){$vpn = Get-VpnConnection -Name $VPN_Name}
+if(Get-VpnConnection -Name $VPN_Name -AllUserConnection -ErrorAction SilentlyContinue){$vpn = Get-VpnConnection -Name $VPN_Name -AllUserConnection}
 
 if($vpn.ConnectionStatus -eq "Connected"){
-  rasdial $vpnName /DISCONNECT;
+  rasdial $VPN_Name /DISCONNECT;
 }
 
 ###############################################################################
