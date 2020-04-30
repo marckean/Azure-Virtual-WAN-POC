@@ -73,7 +73,7 @@ seems to be a whole lot cleaner, and I can see the connection in the Windows net
 $VPN_Name = 'AzureDeviceTunnel'
 $VPN_ServerName = 'hub0.dg67i3fr1l94yn9nwcrsv5fue.vpn.azure.com'
 Add-VpnConnection -AuthenticationMethod MachineCertificate -ServerName $VPN_ServerName `
-    -EncryptionLevel Required -Name $VPN_Name -TunnelType Ikev2 -AllUserConnection -SplitTunneling
+    -EncryptionLevel Required -Name $VPN_Name -TunnelType Ikev2 -SplitTunneling -AllUserConnection
 
 ###############################################################################
 # Connection of the VPN connection

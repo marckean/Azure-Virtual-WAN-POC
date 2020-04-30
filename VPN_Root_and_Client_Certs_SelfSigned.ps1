@@ -6,7 +6,7 @@
 # Variables
 ###############################################################################
 
-$CertStoreRootPath = "LocalMachine" # Use 'CurrentUser' or 'LocalMachine' here
+$CertStoreRootPath = "CurrentUser" # Use 'CurrentUser' or 'LocalMachine' here
 $CNroot = 'P2SRootCert'
 $CNclient = 'P2SChildCert'
 $ClientCertStore = "Cert:\$CertStoreRootPath\My"
@@ -70,7 +70,8 @@ catch {
 
     # Move the Root certificate to the root certificate store
     $PSChildName = (Get-ChildItem -Path $ClientCertStore | where {$_.Subject -eq "CN=$CNroot"}).PSChildName
-    Move-Item -Path $ClientCertStore\$PSChildName -Destination $RootCertStore
+    $path = '{0}\{1}' -f $ClientCertStore, $PSChildName
+    Move-Item -Path $path -Destination $RootCertStore
 
 }
 
