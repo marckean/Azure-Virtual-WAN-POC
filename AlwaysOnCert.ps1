@@ -98,7 +98,8 @@ if($vpn.ConnectionStatus -eq "Connected"){
 # Removal of the VPN connections
 ###############################################################################
 # Remove Always On VPN
-Get-VpnConnection -Name $VPN_Name | Remove-VpnConnection -Force
+Get-VpnConnection -Name $VPN_Name | Remove-VpnConnection -Force -ErrorAction SilentlyContinue
+Get-VpnConnection -Name $VPN_Name -AllUserConnection | Remove-VpnConnection -Force -ErrorAction SilentlyContinue
 
 ###############################################################################
 # Check routes
