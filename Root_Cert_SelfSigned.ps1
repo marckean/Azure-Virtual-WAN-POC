@@ -8,6 +8,7 @@
 
 $CertStoreRootPath = "LocalMachine"
 $CNroot = 'P2SRootCert'
+$ClientCertStore = "Cert:\$CertStoreRootPath\My"
 $RootCertStore = "Cert:\$CertStoreRootPath\Root"
 $ClientPFXCertPassword = "Passw0rd"
 
