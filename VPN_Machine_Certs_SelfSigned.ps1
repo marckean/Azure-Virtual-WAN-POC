@@ -14,27 +14,6 @@ $RootCertStore = "Cert:\$CertStoreRootPath\Root"
 $ClientPFXCertPassword = "Passw0rd"
 
 ###############################################################################
-# Create a self-signed root certificate - the base64 version of this to be in Azure
-###############################################################################
-
-try {
-
-    # Check existing self-signed root certificate
-    (Get-ChildItem -Path $RootCertStore | where {$_.Subject -eq "CN=$CNroot"})
-    (Get-ChildItem -Path $ClientCertStore | where {$_.Subject -eq "CN=$CNroot"})
-
-}
-catch {
-
-    # Ceate this certificate in the Personal certificate store temporarily 
-    $rootcert = New-SelfSignedCertificate -Type Custom -KeySpec Signature `
-        -Subject "CN=$CNroot" -KeyExportPolicy Exportable `
-        -HashAlgorithm sha256 -KeyLength 2048 `
-        -CertStoreLocation $ClientCertStore -KeyUsageProperty Sign -KeyUsage CertSign
-
-}
-
-###############################################################################
 # Generate a client certificate
 ###############################################################################
 
@@ -47,6 +26,7 @@ try {
 catch {
 
     # Generate a client certificate
+    $rootcert = (Get-ChildItem -Path $RootCertStore | where {$_.Subject -eq "CN=$CNroot"})
     New-SelfSignedCertificate -Type Custom -DnsName $CNclient -KeySpec Signature `
         -Subject "CN=$CNclient" -KeyExportPolicy Exportable `
         -HashAlgorithm sha256 -KeyLength 2048 `

@@ -6,7 +6,7 @@
 # Variables
 ###############################################################################
 
-$CertStoreRootPath = "LocalMachine"
+$CertStoreRootPath = "CurrentUser" # Use 'CurrentUser' or 'LocalMachine' here
 $CNroot = 'P2SRootCert'
 $ClientCertStore = "Cert:\$CertStoreRootPath\My"
 $RootCertStore = "Cert:\$CertStoreRootPath\Root"
@@ -25,7 +25,7 @@ try {
 catch {
 
     # Ceate this certificate in the Personal certificate store temporarily 
-    $rootcert = New-SelfSignedCertificate -Type Custom -KeySpec Signature `
+    New-SelfSignedCertificate -Type Custom -KeySpec Signature `
         -Subject "CN=$CNroot" -KeyExportPolicy Exportable `
         -HashAlgorithm sha256 -KeyLength 2048 `
         -CertStoreLocation $ClientCertStore -KeyUsageProperty Sign -KeyUsage CertSign
@@ -45,9 +45,8 @@ try {
 catch {
 
     # Move the Root certificate to the root certificate store
-    $PSChildName = (Get-ChildItem -Path $ClientCertStore | where {$_.Subject -eq "CN=$CNroot"}).PSChildName
-    $path = '{0}\{1}' -f $ClientCertStore, $PSChildName
-    Move-Item -Path $path -Destination $RootCertStore
+    $PSPath = (Get-ChildItem -Path $ClientCertStore | where {$_.Subject -eq "CN=$CNroot"}).PSPath
+    Move-Item -Path $PSPath -Destination $RootCertStore
 
 }
 
