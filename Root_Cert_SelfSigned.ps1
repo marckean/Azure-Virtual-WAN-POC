@@ -46,7 +46,8 @@ catch {
 
     # Move the Root certificate to the root certificate store
     $PSPath = (Get-ChildItem -Path $ClientCertStore | where {$_.Subject -eq "CN=$CNroot"}).PSPath
-    Move-Item -Path $PSPath -Destination $RootCertStore
+    Move-Item -Path $PSPath -Destination $RootCertStore -Force
+    $PSPath | Move-Item -Destination $RootCertStore
 
 }
 
